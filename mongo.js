@@ -17,7 +17,7 @@ const personSchema = new mongoose.Schema({
     number: String,
 })
 
-const Person = mongoose.model("Person", personSchema)
+const Person = mongoose.model('Person', personSchema)
 
 const newname = process.argv[3]
 const newnumber = process.argv[4]
@@ -37,7 +37,7 @@ if (process.argv.length < 4) {
         number: newnumber,
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
         console.log(`added ${newname} number ${newnumber} to phonebook`)
         mongoose.connection.close()
     })

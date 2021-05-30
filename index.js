@@ -1,11 +1,10 @@
 require('dotenv').config()
-const mongoose = require('mongoose')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 
-morgan.token('content', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('content', function (req) { return JSON.stringify(req.body) })
 
 const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms - :content'))
@@ -34,11 +33,12 @@ app.listen(PORT, () => {
 })
 
 app.get('/info', (request, response) => {
-    const arrayLength = persons.length
+    const arrayLength = Person.findById(request.param.id)
+        .then(person => { return person.length })
     response.send(`<h3>Phonebook has info for ${arrayLength} people</h3>`)
 })
 
-app.get("/api/persons/:id", (request, response, next) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.param.id)
         .then(person => {
             if (person) {
@@ -57,7 +57,7 @@ app.get("/api/persons/:id", (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
     console.log(request.params.id)
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
