@@ -38,7 +38,5 @@ personSchema.set('toJSON', {
     }
 })
 const opts = { runValidators: true };
-personSchema.updateOne({}, {}, opts, function (err) {
-    assert.equal(err.errors.person.message, 'invalid Person')
-})
+
 module.exports = mongoose.model('Person', personSchema)
